@@ -1,0 +1,321 @@
+<style>
+  i.fa {
+    cursor: default;
+  }
+</style>
+<div>
+  <h1 *ngIf="appointment.id == undefined">اضافة كشف جديد</h1>
+  <h1 *ngIf="appointment.id != undefined">تعديل كشف </h1>
+  <div class="content-wrapper" style="margin-left: 0px; min-height: 0px;">
+    <div class="box box-primary">
+      <form role="form" #AppointmentFrom="ngForm">
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-accent-primary">
+                <div class="card-header">
+                  <h4>بيانات المريض</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label for="name">الاسم <i style="color: red;">*</i></label>
+                      <mat-form-field appearance="fill" class="mat-select-cls">
+                        <mat-label>اختر</mat-label>
+                        <mat-select [(ngModel)]="appointment.patient" #patientId="ngModel" name="patientId"
+                          id="patientId" [required]="true">
+                          <input (keyup)="filterPatient($event.target.value, 1)" class="form-control"
+                            placeholder="اختر المريض">
+                          <mat-option *ngFor="let patient of filteredPatientList" [value]="patient">{{ patient.fullName
+                            }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field><br>
+                      <small *ngIf="patientId.invalid && (patientId.touched || patientId.dirty)" style="color: red">يجب
+                        اختيار المريض</small>
+                    </div>
+
+                    <div class="col-md-4 form-group">
+                      <label for="phone">رقم التليفون </label>
+                      <mat-form-field appearance="fill" class="mat-select-cls">
+                        <mat-label>اختر</mat-label>
+                        <mat-select [(ngModel)]="appointment.patient" #patientPhone="ngModel" name="patientPhone"
+                          id="patientPhone">
+                          <input (keyup)="filterPatient($event.target.value, 2)" class="form-control"
+                            placeholder="اختر التليفون">
+                          <mat-option *ngFor="let patient of filteredPatientList" [value]="patient">{{ patient.phone }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field><br>
+                    </div>
+
+                    <div class="col-md-4 form-group">
+                      <button (click)="addNewPatient()" class="btn btn-primary" style="margin:10px">اضافة مريض
+                        جديد</button>
+                      <button (click)="editPatient(appointment.patient.id)" class="btn btn-warning"
+                        [disabled]="appointment.patient.id == undefined" style="margin:10px">تعديل بيانات المريض
+                      </button>
+                    </div>
+                  </div>
+
+                    <div class="row">
+                      <div class="col-md-2 form-group">
+                        <label for="age">السن : {{appointment.patient.age}}</label>
+                      </div>
+                      <div class="col-md-2 form-group">
+                        <label for="gender">النوع :
+                          <label
+                            *ngIf="appointment.patient.id > 0 && appointment.patient.gender == genderEnum.Male">ذكر</label>
+                          <label
+                            *ngIf="appointment.patient.id > 0 && appointment.patient.gender == genderEnum.Female">انثى</label>
+                        </label>
+                      </div>
+                      <div class="col-md-7 form-group">
+                        <label for="address">العنوان : {{appointment.patient.address}}</label>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h5>التاريخ الطبي :</h5>
+                      </div>
+                      <ul *ngIf="appointment.patient.medicalHistoryList != undefined && appointment.patient.medicalHistoryList.length > 0; else NoMedicalHistory"
+                        class="list-inline">
+                        <li *ngFor="let PMH of appointment.patient.medicalHistoryList" class="list-inline-item"
+                          style="margin-right: 25px;">
+                          <span><i class="fa fa-asterisk" aria-hidden="true"></i> {{ PMH.name }} </span>
+                        </li>
+                      </ul>
+                      <ng-template #NoMedicalHistory>
+                        <div class="col-md-12"><label>لا يوجد تاريخ طبي</label></div>
+                      </ng-template>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-accent-primary">
+                <div class="card-header">
+                  <h4>بيانات الكشف</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label for="user">الدكتور <i style="color: red;">*</i></label>
+                      <mat-form-field appearance="fill" class="mat-select-cls">
+                        <mat-label>اختر</mat-label>
+                        <mat-select [(ngModel)]="appointment.user" #user="ngModel" name="user" id="user"
+                          [required]="true">
+                          <input (keyup)="filterUser($event.target.value)" class="form-control"
+                            placeholder="اختر الدكتور">
+                          <mat-option *ngFor="let user of filteredUserList" [value]="user">{{ user.fullName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field><br>
+                      <small *ngIf="patientPhone.invalid && (patientPhone.touched || patientPhone.dirty)"
+                        style="color: red">يجب
+                        اختيار الدكتور</small>
+                    </div>
+
+                    <div class="col-md-4 form-group">
+                      <label for="clinic">العيادة <i style="color: red;">*</i></label>
+                      <mat-form-field appearance="fill" class="mat-select-cls">
+                        <mat-label>اختر</mat-label>
+                        <mat-select [(ngModel)]="appointment.clinic" #clinic="ngModel" name="clinic" id="clinic"
+                          [required]="true">
+                          <input (keyup)="filterClinic($event.target.value)" class="form-control"
+                            placeholder="اختر العيادة">
+                          <mat-option *ngFor="let clinic of filteredClinicList" [value]="clinic">{{ clinic.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field><br>
+                      <small *ngIf="clinic.invalid && (clinic.touched || clinic.dirty)" style="color: red">يجب اختيار
+                        العيادة</small>
+                    </div>
+
+                    <div class="col-md-4 form-group">
+                      <label for="date">التاريخ <i style="color: red;">*</i></label>
+                      <mat-form-field appearance="legacy">
+                        <mat-label>اختر تاريخ</mat-label>
+                        <input matInput [matDatepicker]="picker" style="height: auto;" [(ngModel)]="appointment.date"
+                          #date="ngModel" name="date" class="form-control" id="date" placeholder="التاريخ" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label for="category">فئة الكشف <i style="color: red;">*</i></label>
+                      <mat-form-field appearance="fill" class="mat-select-cls">
+                        <mat-label>اختر</mat-label>
+                        <mat-select [(ngModel)]="appointment.category" #category="ngModel"
+                          (selectionChange)="updatePrices()" name="category" id="category" [required]="true">
+                          <input (keyup)="filterCategory($event.target.value)" class="form-control"
+                            placeholder="اختر فئة الكشف">
+                          <mat-option *ngFor="let category of filteredCategoryList" [value]="category">{{ category.name
+                            }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field><br>
+                      <small *ngIf="category.invalid && (category.touched || category.dirty)" style="color: red">يجب
+                        اختيار فئة
+                        الكشف</small>
+                    </div>
+
+                    <div class="col-md-4 form-group" style="margin-top: 25px;">
+                      <label for="price" style="float: right;">السعر <i style="color: red;">*</i></label>
+                      <input [(ngModel)]="appointment.category.price" #price="ngModel" type="number"
+                        class="form-control" name="price" id="price" placeholder="السعر" min="0" required
+                        style="width: 60%;" (ngModelChange)="updatePrices()">
+                      <small *ngIf="price.invalid && (price.touched || price.dirty)" style="color: red">يجب ادخال
+                        السعر</small>
+                    </div>
+
+                    <div class="col-md-4 form-group">
+                      <label for="category">الحالة <i style="color: red;">*</i></label>
+                      <mat-form-field appearance="fill" class="mat-select-cls">
+                        <mat-label>اختر</mat-label>
+                        <mat-select [(ngModel)]="appointment.state" #state="ngModel" name="state" id="state"
+                          [required]="true">
+                          <mat-option [value]="appointmentStateEnum.Pending">قيد الانتظار </mat-option>
+                          <mat-option [value]="appointmentStateEnum.Current">جارى</mat-option>
+                          <mat-option [value]="appointmentStateEnum.Finished">انتهى</mat-option>
+                          <mat-option [value]="appointmentStateEnum.Cancelled">ملغي</mat-option>
+                  </mat-select>
+                      </mat-form-field><br>
+                      <small *ngIf="category.invalid && (category.touched || category.dirty)" style="color: red">يجب
+                        اختيار فئة
+                        الكشف</small>
+                    </div>
+                  </div>
+
+                  <h4>مضافات للكشف</h4>
+                  <div class="row">
+                    <div class="col-md-4 form-group" *ngFor="let appointmentAddition of appointmentAdditionList">
+                      <mat-checkbox (change)="selectAppointmentAddition(appointmentAddition.id, $event.checked)"
+                        [checked]="isChecked(appointmentAddition.id)" style="margin-top: 0px;font-size: 15px;">{{
+                        appointmentAddition.name }} ({{ appointmentAddition.price }})</mat-checkbox>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label for="toothNumber" class="col-md-4">رقم السن <i style="color: red;">*</i></label>
+                      <div class="col-md-8" *ngFor="let tooth of appointment.toothList; let i = index">
+                        <input [(ngModel)]="tooth.toothNumber" #toothNumber="ngModel" type="number"
+                          class="form-control col-md-4" name="{{'toothNumber'+i}}" id="{{'toothNumber'+i}}"
+                          placeholder="رقم السن" min="0" required style="display: inline;">
+                        <mat-radio-group aria-label="اختر مكان السن" [(ngModel)]="tooth.toothPosition"
+                          name="{{'toothPosition'+i}}" class="col-md-8">
+                          <mat-radio-button [value]="toothPositionEnum.Upper" checked="true">علوى</mat-radio-button>
+                          <mat-radio-button [value]="toothPositionEnum.Lower">سفلى</mat-radio-button>
+                        </mat-radio-group>
+                        <button class="btn btn-primary" (click)="addNewTooth()" style="border-radius: 50% !important;">
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-danger" (click)="removeTooth(i)" style="border-radius: 50% !important;"
+                          *ngIf="i > 0">
+                          <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button>
+                        <br><small *ngIf="toothNumber.invalid && (toothNumber.touched || toothNumber.dirty)"
+                          style="color: red">يجب
+                          ادخال رقم السن</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-accent-primary">
+                <div class="card-header">
+                  <h4>الصور</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <span *ngFor="let img of appointment.attachmentList; let i=index">
+                        <img [src]="createImgPath(img.url)" alt="صور الكشف" height="100" width="100"
+                          (click)="viewImg(i)" style="cursor: pointer;">
+                        <a class="remove-image" (click)="removeImg(i)" style="display: inline;">&#215;</a>
+                      </span>
+                      <app-file-uploader [uploadURL]="uploadURL" (onUploadFinished)="uploadFinished($event)">
+                      </app-file-uploader>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-accent-primary">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6 form-group">
+                      <label for="notes">ملاحظات</label>
+                      <textarea [(ngModel)]="appointment.notes" #notes="ngModel" type="text" name="notes"
+                        class="form-control" id="notes" placeholder="ملاحظات" rows="5"></textarea>
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label for="price">الاسعار</label><br>
+                      <table>
+                        <tr>
+                          <td><label for="totalPrice">المبلغ الكلي: </label></td>
+                          <td> <input [(ngModel)]="appointment.totalPrice" #totalPrice="ngModel" type="number"
+                              class="form-control" name="totalPrice" id="totalPrice" placeholder="المبلغ الكلي" min="0">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><label for="discountPercentage">الخصم: </label></td>
+                          <td><input [(ngModel)]="appointment.discountPercentage" #discount="ngModel" type="number"
+                              class="form-control" name="discount" id="discount" placeholder="الخصم" min="0"></td>
+                        </tr>
+                        <tr>
+                          <td><label for="finalPrice">السعر النهائي: </label></td>
+                          <td>{{ appointment.totalPrice - appointment.discountPercentage }}</td>
+                        </tr>
+                        <tr>
+                          <td><label for="paidAmount">المدفوع: </label></td>
+                          <td><input [(ngModel)]="appointment.paidAmount" #paidAmount="ngModel" type="number"
+                              class="form-control" name="paidAmount" id="paidAmount" placeholder="الخصم" min="0"></td>
+                        </tr>
+                        <tr>
+                          <td><label for="change">الباقى: </label></td>
+                          <td>{{ appointment.totalPrice - appointment.discountPercentage - appointment.paidAmount }}
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="box-footer col-md-12" style="float: right; height: 50px;">
+                      <button type="submit" class="btn btn-primary" (click)="submitAppointment(AppointmentFrom)"
+                        [disabled]="AppointmentFrom.invalid">حفظ</button>
+                      <button type="button" class="btn btn-secondary" style="margin-left: 10px;"
+                        (click)="cancel()">الغاء</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</div>
+
+<ng-template #imgViewer>
+  <img [src]="imgViewerSrc" alt="صور الكشف" height="400" width="400">
+</ng-template>

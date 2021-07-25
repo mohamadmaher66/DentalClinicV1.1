@@ -1,0 +1,53 @@
+<div class="content-wrapper">
+    <h3>المصاريف</h3>
+    <button (click)="addNewRecord()" class="btn btn-primary" style="margin:10px">اضافة جديد</button>
+    <br>
+    <mat-form-field class="col-md-10">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="بحث" style="font-size: 15px;">
+    </mat-form-field>
+    <div class="example-container">
+        <table mat-table [dataSource]="expenseList" style="width: 100%;">
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>العنوان</th>
+                <td mat-cell *matCellDef="let expense" style="width: 20%;"> {{expense.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cost">
+                <th mat-header-cell *matHeaderCellDef>التكلفة</th>
+                <td mat-cell *matCellDef="let expense" style="width: 10%;"> {{expense.cost}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actionDate">
+                <th mat-header-cell *matHeaderCellDef>التاريخ</th>
+                <td mat-cell *matCellDef="let expense" style="width: 15%;"> {{expense.actionDate | date: 'dd/MM/yyyy'}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>النوع</th>
+                <td mat-cell *matCellDef="let expense" style="width: 20%;"> 
+                    <label *ngIf="expense.type == expenseTypeEnum.In">داخل للعيادة</label>
+                    <label *ngIf="expense.type == expenseTypeEnum.Out">خارج من العيادة</label>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="clinicName">
+                <th mat-header-cell *matHeaderCellDef>العيادة</th>
+                <td mat-cell *matCellDef="let expense" style="width: 20%;"> {{expense.clinicName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> الخيارات </th>
+                <td mat-cell *matCellDef="let expense" style="width: 15%; ">
+                    <a (click)="editRecord(expense.id)"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a>
+                    <a (click)="deleteRecord(expense.id, expense.name)"><i class="fa fa-trash fa-lg"
+                            aria-hidden="true"></i></a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSize]="configService.configuration.pageSize" showFirstLastButtons 
+        [hidePageSize]="true" (page)="getServerData($event)" [length]="rowsCount"></mat-paginator>

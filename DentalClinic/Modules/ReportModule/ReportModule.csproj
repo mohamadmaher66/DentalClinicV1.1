@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.12" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\DBContext\DBContext.csproj" />
+    <ProjectReference Include="..\..\Core\DBModels\DBModels.csproj" />
+    <ProjectReference Include="..\..\Core\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\..\Core\Enums\Enums.csproj" />
+    <ProjectReference Include="..\..\Core\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Core\Request\Request.csproj" />
+    <ProjectReference Include="..\AppointmentModule\AppointmentModule.csproj" />
+    <ProjectReference Include="..\ClinicModule\ClinicModule.csproj" />
+    <ProjectReference Include="..\ExpenseModule\ExpenseModule.csproj" />
+    <ProjectReference Include="..\MedicalHistoryModule\MedicalHistoryModule.csproj" />
+    <ProjectReference Include="..\UserModule\UserModule.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,8 @@
+<div class="row" style="margin-bottom:15px;">
+    <div class="col-md-3 input-group">
+      <input type="file" #file multiple placeholder="اختر الصور" accept="image/x-png,image/gif,image/jpeg"
+       (change)="uploadFile(file.files)" style="display:none;">
+      <button type="button" class="btn btn-success" (click)="file.click()" style="margin: 15px;">
+          <span class="glyphicon glyphicon-upload" ></span> اختر الصور</button>
+    </div>
+  </div>

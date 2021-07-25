@@ -1,0 +1,76 @@
+<h1 mat-dialog-title *ngIf="patient.id == undefined">اضافة مريض جديد</h1>
+<h1 mat-dialog-title *ngIf="patient.id != undefined">تعديل مريض</h1>
+<div mat-dialog-content>
+  <div class="content-wrapper" style="margin-left: 0px; background-color: #ffffff; min-height: 0px;">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-primary">
+          <form role="form" #PatientFrom="ngForm">
+            <div class="box-body">
+
+              <h4>بيانات المريض</h4>
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="fullName">الاسم <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="patient.fullName" #fullName="ngModel" type="text" class="form-control"
+                    name="fullName" id="fullName" placeholder="الاسم" required>
+                  <small *ngIf="fullName.invalid && (fullName.touched || fullName.dirty)" style="color: red">
+                    يجب ادخال الاسم</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="age">السن </label>
+                  <input [(ngModel)]="patient.age" #age="ngModel" type="number" class="form-control" name="age"
+                    id="age" placeholder="السن" min="0">
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="gender">النوع</label>
+                  <mat-form-field appearance="fill" class="mat-select-cls">
+                    <mat-select [(ngModel)]="patient.gender" [required]="true" #gender="ngModel" name="gender" id="gender"
+                                  panelClass="mat-select-cls">
+                      <mat-option [value]="genderEnum.Male"> ذكر </mat-option>
+                      <mat-option [value]="genderEnum.Female"> انثى </mat-option>
+                    </mat-select>
+                  </mat-form-field>                  
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="address">العنوان </label>
+                  <input [(ngModel)]="patient.address" #address="ngModel" type="text" class="form-control"
+                    name="address" id="address" placeholder="العنوان">
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="phone">رقم التليفون </label><br>
+                  <input [(ngModel)]="patient.phone" #phone="ngModel" type="text" class="form-control" name="phone"
+                    id="phone" placeholder="رقم التليفون">
+                </div>
+              </div>
+
+              <hr>
+              <h4>التاريخ الطبي</h4>
+              <div class="row">
+                <div class="col-md-4 form-group" *ngFor="let medicalHistory of medicalHistoryList">
+                  <mat-checkbox (change)="selectMedicalHistory(medicalHistory.id, $event.checked)" 
+                                [checked]="isChecked(medicalHistory.id)"
+                  style="margin-top: 0px;font-size: 15px;">{{ medicalHistory.name }}</mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div mat-dialog-actions style="float: right;">
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary" (click)="submitPatient(PatientFrom)" [disabled]="PatientFrom.invalid">{{btnTitle}}</button>
+    <button type="button" class="btn btn-secondary" style="margin-left: 10px;"
+      (click)="dialogRef.close();">الغاء</button>
+  </div>
+</div>

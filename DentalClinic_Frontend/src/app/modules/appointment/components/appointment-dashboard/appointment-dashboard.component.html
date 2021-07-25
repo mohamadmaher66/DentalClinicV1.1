@@ -1,0 +1,125 @@
+<div class="content-wrapper">
+    <h3>كشوفات اليوم</h3>
+    <button (click)="addNewRecord()" class="btn btn-primary" style="margin:10px">اضافة كشف جديد</button>
+    <button (click)="getAllAppointments()" class="btn btn-primary" style="margin:10px"><i class="fa fa-refresh" aria-hidden="true"></i> تحديث </button>
+    <br>
+    <div class="row">
+        <div class="col-md-4 form-group">
+            <label for="user">الدكتور  </label>
+            <mat-form-field class="mat-select-cls">
+              <mat-select name="user" id="user" (selectionChange)="selectUser($event.value)" value="0">
+                <input (keyup)="filterUser($event.target.value)" class="form-control" placeholder="اختر الدكتور">
+                <mat-option value="0">الكل </mat-option>
+                <mat-option *ngFor="let user of filteredUserList" [value]="user.id">{{ user.fullName }} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4 form-group">
+            <label for="clinic">العيادة  </label>
+            <mat-form-field class="mat-select-cls">
+              <mat-select name="clinic" id="clinic" (selectionChange)="selectClinic($event.value)" value="0">
+                <input (keyup)="filterClinic($event.target.value)" class="form-control" placeholder="اختر العيادة">
+                <mat-option value="0" selected>الكل </mat-option>
+                <mat-option *ngFor="let clinic of filteredClinicList" [value]="clinic.id">{{ clinic.name }} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+    </div>
+    <div class="example-container">
+        <div *ngFor="let appointment of appointmentList" class="col-md-12">
+            <div class="card"
+                [ngClass]="{'border-success': appointment.state == appointmentStateEnum.Current,
+                                                    'border-warning':appointment.state == appointmentStateEnum.Pending }">
+                <div class="card-header">اسم المريض : {{ appointment.patient.fullName }}
+                    <span class="badge float-right"
+                        [ngClass]="{'badge-success': appointment.state == appointmentStateEnum.Current,
+                                         'badge-warning':appointment.state == appointmentStateEnum.Pending }">
+                        <label *ngIf="appointment.state == appointmentStateEnum.Current">جارى</label>
+                        <label *ngIf="appointment.state == appointmentStateEnum.Pending">قيد الانتظار</label>
+                    </span>
+                    <span style="float: left;margin-left: 15px;">
+                        <button (click)="editRecord(appointment.id)" class="btn btn-primary">تعديل الكشف </button>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-12">
+                                  <label for="age">فئة الكشف : {{appointment.category.name}}</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4"><label for="age">رقم السن :</label></div>
+                                    <ul class="list-inline col-md-12">
+                                        <li *ngFor="let tooth of appointment.toothList" class="list-inline-item" style="margin-right: 25px;">
+                                            <label for="age"><i class="fa fa-asterisk" aria-hidden="true"></i> {{ tooth.toothNumber }} (
+                                                <span *ngIf="tooth.toothPosition == toothPositionEnum.Upper">علوى</span>
+                                                <span *ngIf="tooth.toothPosition == toothPositionEnum.Lower">سفلى</span>
+                                                )</label>
+                                        </li>
+                                      </ul>
+                                    <div class="col-md-8" *ngFor="let tooth of appointment.toothList">
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="notes">ملاحظات</label>
+                                    <textarea [(ngModel)]="appointment.notes" #notes="ngModel" type="text" name="notes"
+                                        class="form-control" id="notes" placeholder="ملاحظات" rows="4" disabled></textarea>
+                                </div>
+                              </div>
+                        </div>
+                        <div class="col-md-4">
+                            <table>
+                                <tr>
+                                <td><label for="totalPrice">المبلغ الكلي: </label></td>
+                                <td> <input [(ngModel)]="appointment.totalPrice" #totalPrice="ngModel" type="number"
+                                    class="form-control" name="totalPrice" id="totalPrice" placeholder="المبلغ الكلي" min="0">
+                                </td>
+                                </tr>
+                                <tr>
+                                <td><label for="discountPercentage">الخصم: </label></td>
+                                <td><input [(ngModel)]="appointment.discountPercentage" #discount="ngModel" type="number"
+                                    class="form-control" name="discount" id="discount" placeholder="الخصم" min="0"></td>
+                                </tr>
+                                <tr>
+                                <td><label for="finalPrice">السعر النهائي: </label></td>
+                                <td>{{ appointment.totalPrice - appointment.discountPercentage }}</td>
+                                </tr>
+                                <tr>
+                                <td><label for="paidAmount">المدفوع: </label></td>
+                                <td><input [(ngModel)]="appointment.paidAmount" #paidAmount="ngModel" type="number"
+                                    class="form-control" name="paidAmount" id="paidAmount" placeholder="الخصم" min="0"></td>
+                                </tr>
+                                <tr>
+                                <td><label for="change">الباقى: </label></td>
+                                <td>{{ appointment.totalPrice - appointment.discountPercentage - appointment.paidAmount }}
+                                </td>
+                                </tr>
+                                <tr><td></td><td><button (click)="saveState(appointment, appointment.state)" class="btn btn-info" style="float: left;">حفظ</button></td></tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="float: left;">
+                                        <button *ngIf="appointment.state == appointmentStateEnum.Pending" (click)="saveState(appointment, appointmentStateEnum.Current)" class="btn btn-success">بدء</button>
+                                        <button *ngIf="appointment.state == appointmentStateEnum.Current" (click)="saveState(appointment, appointmentStateEnum.Finished)" class="btn btn-secondary">انهاء</button>
+                                        <button *ngIf="appointment.state == appointmentStateEnum.Pending" (click)="saveState(appointment, appointmentStateEnum.Cancelled)" class="btn btn-danger">الغاء</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="appointmentList == undefined || appointmentList.length == 0" class="row">
+            <div class="col-md-12">
+              <div class="card card-accent-primary">
+                <div class="card-body">
+                    <h4>لا يوجد كشوفات</h4>
+				 </div>
+              </div>
+            </div>
+			</div>
+    </div>

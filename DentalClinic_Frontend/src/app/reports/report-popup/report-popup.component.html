@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>{{reportTitle}}</h1>
+<div mat-dialog-content style="height: 100%; max-height: 510px; margin-top: -21px;">
+    <div style="margin-left: 0px; background-color: #ffffff;">
+        <div class="row" style="height: 100%;">
+            <div class="col-md-12" style="height: 490px;">
+                <!-- general form elements -->
+                <div class="box box-primary" style="height: 100%;">
+                    <!-- form start -->
+                    <ng2-pdfjs-viewer #pdfViewer 
+                        [externalWindow]="false" 
+                        [openFile]="false" 
+                        [viewBookmark]="false" 
+                        [download]="true"
+                        zoom="100">
+                    </ng2-pdfjs-viewer>
+                </div>
+                <!-- /.box -->
+            </div>            
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions style="float: right;">
+    <div class="box-footer" >
+        <button type="button" class="btn btn-secondary" (click)="dialogRef.close();">اغلاق</button>
+    </div>
+  </div>

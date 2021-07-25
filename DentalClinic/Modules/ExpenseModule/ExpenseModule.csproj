@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\DBContext\DBContext.csproj" />
+    <ProjectReference Include="..\..\Core\DBModels\DBModels.csproj" />
+    <ProjectReference Include="..\..\Core\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\..\Core\Enums\Enums.csproj" />
+    <ProjectReference Include="..\..\Core\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Core\Request\Request.csproj" />
+    <ProjectReference Include="..\ClinicModule\ClinicModule.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,116 @@
+// Here you can add other styles
+* {
+    direction: rtl;
+    font-family: Cairo , Roboto, "Helvetica Neue", sans-serif ; 
+    font-size: medium;
+}
+.login{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-repeat:no-repeat;
+  background-size:cover;  
+}
+button.d-lg-block.d-none.navbar-toggler{
+    float: right;
+    position: absolute;
+    margin-right: 160px;
+}
+.mat-sort-header-content, th.mat-header-cell{
+    text-align:center;
+    font-weight: bold; 
+    font-size: 15px;
+}
+.details-panel{
+    //margin-right: 175px;
+    position: fixed; 
+    z-index: 9999;
+}
+.cdk-overlay-container {
+  z-index: 9999;
+}
+
+mat-spinner.mat-spinner.mat-progress-spinner.mat-primary.mat-progress-spinner-indeterminate-animation{
+    top: 50%;
+    left: 40%;
+    z-index: 99999;
+    position: absolute;
+}
+
+i.fa{
+    cursor: pointer;
+  }
+  
+  i.fa.fa-edit.fa-lg{
+    color: steelblue;
+    margin-left: 15px;
+    padding-top: 5px;
+  }
+  
+  i.fa.fa-trash.fa-lg{
+    color: firebrick;
+  }
+  
+  i.fa.fa-check-circle.fa-lg, i.fa.fa-check{
+    color: forestgreen;
+  }
+  i.fa.fa-times{
+    color: red;
+  }
+  i.fa.fa-times, i.fa.fa-check{
+    cursor: auto;
+  }
+
+  td.mat-cell.cdk-cell.cdk-column-Description.mat-column-Description.ng-star-inserted{
+    text-align: right;
+  }
+  .mat-form-field-appearance-fill .mat-form-field-flex {
+    background: white;
+  }
+  mat-checkbox{
+    font-size: 20px;
+    margin-top: 20px;
+  }
+  .mat-checkbox-ripple .mat-ripple-element,.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+  span.mat-radio-inner-circle
+   {
+    background-color: rgb(50, 50, 211) !important;
+  }
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+    border-color: rgb(50, 50, 211) !important;
+  }
+
+    .invalid-feedback{
+      display: block;
+    }
+
+    .remove-image {
+      display: none;
+      position: relative;
+      top: -40px;
+      left: 115px;
+      border-radius: 10em;
+      padding: 2px 6px 1px;
+      text-decoration: none;
+      font: 700 21px/20px sans-serif;
+      background: #7564ff;
+      border: 3px solid #fff;
+      color: #FFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(0,0,0,0.3);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        -webkit-transition: background 0.5s;
+        transition: background 0.5s;
+      }
+      .remove-image:hover {
+       background: #E54E4E;
+       cursor: pointer;
+      }
+      .remove-image:active {
+       background: #E54E4E;
+      }
+
+      .box-footer button.btn.btn-secondary{
+        margin-right: 10px;
+      }

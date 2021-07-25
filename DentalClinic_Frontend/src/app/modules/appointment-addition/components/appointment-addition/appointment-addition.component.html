@@ -1,0 +1,40 @@
+<div class="content-wrapper">
+    <h3>اضافات للكشف</h3>
+    <button (click)="addNewRecord()" class="btn btn-primary" style="margin:10px">اضافة جديد</button>
+    <br>
+    <mat-form-field class="col-md-10">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="بحث" style="font-size: 15px;">
+    </mat-form-field>
+    <div class="example-container">
+        <table mat-table [dataSource]="appointmentAdditionList" style="width: 100%;">
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>الاسم</th>
+                <td mat-cell *matCellDef="let appointmentAddition" style="width: 20%;"> {{appointmentAddition.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>السعر</th>
+                <td mat-cell *matCellDef="let appointmentAddition" style="width: 20%;"> {{appointmentAddition.price}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>الوصف</th>
+                <td mat-cell *matCellDef="let appointmentAddition" style="width: 20%;"> {{appointmentAddition.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> الخيارات </th>
+                <td mat-cell *matCellDef="let appointmentAddition" style="width: 15%; ">
+                    <a (click)="editRecord(appointmentAddition.id)"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a>
+                    <a (click)="deleteRecord(appointmentAddition.id, appointmentAddition.name)"><i class="fa fa-trash fa-lg"
+                            aria-hidden="true"></i></a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSize]="configService.configuration.pageSize" showFirstLastButtons 
+        [hidePageSize]="true" (page)="getServerData($event)" [length]="rowsCount"></mat-paginator>

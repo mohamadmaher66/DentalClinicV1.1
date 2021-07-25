@@ -1,0 +1,61 @@
+<div class="content-wrapper">
+    <h3>المستخدمين</h3>
+    <button (click)="addNewRecord()" class="btn btn-primary" style="margin:10px">اضافة جديد</button>
+    <br>
+    <mat-form-field class="col-md-10">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="بحث" style="font-size: 15px;">
+    </mat-form-field>
+    <div class="example-container">
+        <table mat-table [dataSource]="userList" style="width: 100%;">
+
+            <ng-container matColumnDef="fullName">
+                <th mat-header-cell *matHeaderCellDef>الاسم</th>
+                <td mat-cell *matCellDef="let user" style="width: 20%;"> {{user.fullName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef>اسم المستخدم</th>
+                <td mat-cell *matCellDef="let user" style="width: 15%;"> {{user.username}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef>العنوان</th>
+                <td mat-cell *matCellDef="let user" style="width: 20%;"> {{user.address}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef>رقم التليفون</th>
+                <td mat-cell *matCellDef="let user" style="width: 15%;"> {{user.phone}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef>فئة المستخدم</th>
+                <td mat-cell *matCellDef="let user" style="width: 10%;"> 
+                    <label *ngIf="user.role == roleEnum.Doctor">دكتور</label>
+                    <label *ngIf="user.role == roleEnum.Assistant">مساعد</label>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="isActive">
+                <th mat-header-cell *matHeaderCellDef>نشط</th>
+                <td mat-cell *matCellDef="let user" style="width: 5%;"> 
+                    <i *ngIf="user.isActive" class="fa fa-check fa-lg"></i>
+                    <i *ngIf="!user.isActive" class="fa fa-times fa-lg"></i>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> الخيارات </th>
+                <td mat-cell *matCellDef="let user" style="width: 15%; ">
+                    <a (click)="editRecord(user.id)"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a>
+                    <a (click)="deleteRecord(user.id, user.fullName)"><i class="fa fa-trash fa-lg"
+                            aria-hidden="true"></i></a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSize]="configService.configuration.pageSize" showFirstLastButtons [hidePageSize]="true" (page)="getServerData($event)"
+        [length]="rowsCount"></mat-paginator>

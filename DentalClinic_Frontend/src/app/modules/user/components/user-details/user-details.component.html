@@ -1,0 +1,82 @@
+<h1 mat-dialog-title *ngIf="user.id == undefined">اضافة مستخدم جديد</h1>
+<h1 mat-dialog-title *ngIf="user.id != undefined">تعديل مستخدم</h1>
+<div mat-dialog-content>
+  <div class="content-wrapper" style="margin-left: 0px; background-color: #ffffff; min-height: 0px;">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-primary">
+          <form role="form" #userFrom="ngForm">
+            <div class="box-body">
+
+              <h4>بيانات المستخدم</h4>
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="fullName">الاسم <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="user.fullName" #fullName="ngModel" type="text" class="form-control"
+                    name="fullName" id="fullName" placeholder="الاسم" required>
+                  <small *ngIf="fullName.invalid && (fullName.touched || fullName.dirty)" style="color: red">يجب ادخال الاسم</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="address">العنوان</label>
+                  <input [(ngModel)]="user.address" #address="ngModel" type="text" class="form-control"
+                    name="address" id="address" placeholder="العنوان">
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="phone">رقم التليفون</label>
+                  <input [(ngModel)]="user.phone" #phone="ngModel" type="text" class="form-control"
+                    name="phone" id="phone" placeholder="رقم التليفون">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="description">فئة المستخدم <i style="color: red;">*</i></label>
+                  <mat-form-field appearance="fill" class="mat-select-cls">
+                    <mat-label>اختر</mat-label>
+                    <mat-select [(ngModel)]="user.role" [required]="true" #role="ngModel" name="role" id="role" panelClass="mat-select-cls">
+                      <mat-option [value]="roleEnum.Doctor"> دكتور </mat-option>
+                      <mat-option [value]="roleEnum.Assistant"> مساعد </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <small *ngIf="role.invalid && (role.touched || role.dirty)" style="color: red">يجب اختيار نوغ المستخدم</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <mat-checkbox [(ngModel)]="user.isActive" name="isActive" id="isActive">نشط</mat-checkbox>
+                </div>
+              </div>
+
+              <hr>
+              <h4>بيانات الدخول</h4>
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="username">اسم المستخدم <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="user.username" #username="ngModel" type="text" class="form-control"
+                    name="username" id="username" placeholder="اسم المستخدم" autocomplete="new-password" required>
+                    <small *ngIf="username.invalid && (username.touched || username.dirty)" style="color: red">يجب ادخال اسم المستخدم</small>
+                  </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="password">كلمة المرور <i *ngIf="user.id == undefined || user.id == 0" style="color: red;">*</i></label>
+                  <input [(ngModel)]="user.password" #password="ngModel" type="password" class="form-control" autocomplete="new-password"
+                    name="password" id="password" placeholder="كلمة المرور" [required]="user.id == undefined || user.id == 0">
+                    <small *ngIf="password.invalid && (password.touched || password.dirty)" style="color: red">يجب ادخال كلمة المرور</small>
+                  </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div mat-dialog-actions style="float: right;">
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary" (click)="submitUser(userFrom)" [disabled]="userFrom.invalid">{{btnTitle}}</button>
+    <button type="button" class="btn btn-secondary" style="margin-left: 10px;"
+      (click)="dialogRef.close();">الغاء</button>
+  </div>
+</div>

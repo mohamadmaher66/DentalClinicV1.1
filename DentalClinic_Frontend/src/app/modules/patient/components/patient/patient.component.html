@@ -1,0 +1,53 @@
+<div class="content-wrapper">
+    <h3>المرضي</h3>
+    <button (click)="addNewRecord()" class="btn btn-primary" style="margin:10px">اضافة جديد</button>
+    <br>
+    <mat-form-field class="col-md-10">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="بحث" style="font-size: 15px;">
+    </mat-form-field>
+    <div class="example-container">
+        <table mat-table [dataSource]="patientList" style="width: 100%;">
+
+            <ng-container matColumnDef="fullName">
+                <th mat-header-cell *matHeaderCellDef>الاسم</th>
+                <td mat-cell *matCellDef="let patient" style="width: 20%;"> {{patient.fullName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="age">
+                <th mat-header-cell *matHeaderCellDef>السن</th>
+                <td mat-cell *matCellDef="let patient" style="width: 20%;"> {{patient.age}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gender">
+                <th mat-header-cell *matHeaderCellDef>النوع</th>
+                <td mat-cell *matCellDef="let patient" style="width: 10%;"> 
+                    <label *ngIf="patient.gender == genderEnum.Male">ذكر</label>
+                    <label *ngIf="patient.gender == genderEnum.Female">انثى</label>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef>العنوان</th>
+                <td mat-cell *matCellDef="let patient" style="width: 20%;"> {{patient.address}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef>التيلفون</th>
+                <td mat-cell *matCellDef="let patient" style="width: 15%;"> {{patient.phone}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> الخيارات </th>
+                <td mat-cell *matCellDef="let patient" style="width: 15%; ">
+                    <a (click)="editRecord(patient.id)"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a>
+                    <a (click)="deleteRecord(patient.id, patient.fullName)"><i class="fa fa-trash fa-lg"
+                            aria-hidden="true"></i></a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSize]="configService.configuration.pageSize" showFirstLastButtons 
+        [hidePageSize]="true" (page)="getServerData($event)" [length]="rowsCount"></mat-paginator>

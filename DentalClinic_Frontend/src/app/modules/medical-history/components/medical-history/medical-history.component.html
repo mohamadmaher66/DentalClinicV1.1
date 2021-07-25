@@ -1,0 +1,35 @@
+<div class="content-wrapper">
+    <h3>التاريخ الطبي</h3>
+    <button (click)="addNewRecord()" class="btn btn-primary" style="margin:10px">اضافة جديد</button>
+    <br>
+    <mat-form-field class="col-md-10">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="بحث" style="font-size: 15px;">
+    </mat-form-field>
+    <div class="example-container">
+        <table mat-table [dataSource]="medicalHistoryList" style="width: 100%;">
+
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef>الاسم</th>
+                <td mat-cell *matCellDef="let medicalHistory" style="width: 20%;"> {{medicalHistory.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Description">
+                <th mat-header-cell *matHeaderCellDef>الوصف</th>
+                <td mat-cell *matCellDef="let medicalHistory" style="width: 25%;"> {{medicalHistory.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> الخيارات </th>
+                <td mat-cell *matCellDef="let medicalHistory" style="width: 10%; ">
+                    <a (click)="editRecord(medicalHistory.id)"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a>
+                    <a (click)="deleteRecord(medicalHistory.id, medicalHistory.name)"><i class="fa fa-trash fa-lg"
+                            aria-hidden="true"></i></a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSize]="configService.configuration.pageSize" showFirstLastButtons [hidePageSize]="true"
+        (page)="getServerData($event)" [length]="rowsCount"></mat-paginator>

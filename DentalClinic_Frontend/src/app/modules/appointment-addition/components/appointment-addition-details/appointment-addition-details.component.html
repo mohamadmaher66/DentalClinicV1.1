@@ -1,0 +1,47 @@
+<h1 mat-dialog-title *ngIf="appointmentAddition.id == undefined">اضافة جديد</h1>
+<h1 mat-dialog-title *ngIf="appointmentAddition.id != undefined">تعديل </h1>
+<div mat-dialog-content>
+  <div class="content-wrapper" style="margin-left: 0px; background-color: #ffffff; min-height: 0px;">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-primary">
+          <form role="form" #appointmentAdditionFrom="ngForm">
+            <div class="box-body">
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="name">الاسم <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="appointmentAddition.name" #name="ngModel" type="text" class="form-control"
+                    name="name" id="name" placeholder="الاسم" required>
+                  <small *ngIf="name.invalid && (name.touched || name.dirty)" style="color: red">يجب ادخال الاسم</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="price">السعر <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="appointmentAddition.price" #price="ngModel" type="number" class="form-control"
+                    name="price" id="price" placeholder="السعر" min="0" required>
+                  <small *ngIf="price.invalid && price.errors.required && (price.touched || price.dirty)" style="color: red">يجب ادخال السعر</small>
+                  <small *ngIf="price.invalid && price.errors.min && (price.touched || price.dirty)" style="color: red">يجب ان يكون السعر رقم موجب</small>
+                </div>
+
+                <div class="col-md-6 form-group">
+                  <label for="description">الوصف</label>
+                  <textarea [(ngModel)]="appointmentAddition.description" #description="ngModel" type="text" name="description"
+                    class="form-control" id="description" placeholder="الوصف" rows="5"></textarea>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div mat-dialog-actions style="float: right;">
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary" (click)="submitAppointmentAddition(appointmentAdditionFrom)" [disabled]="appointmentAdditionFrom.invalid">{{btnTitle}}</button>
+    <button type="button" class="btn btn-secondary" style="margin-left: 10px;" (click)="dialogRef.close();">الغاء</button>
+  </div>
+</div>

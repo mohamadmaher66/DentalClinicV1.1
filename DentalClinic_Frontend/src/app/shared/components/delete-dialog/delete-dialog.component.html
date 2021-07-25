@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>تأكيد على الحذف</h1>
+<div mat-dialog-content>
+  <p style="font-size: 20px;">هل تريد حذف "{{data.selectedDetails}}"</p> 
+</div>
+<div mat-dialog-actions style="float: right;">
+  <button mat-button [mat-dialog-close]="'ok'" class="btn btn-info" cdkFocusInitial>حذف</button>
+  <button mat-button (click)="onNoClick()" class="btn btn-secondary" style="margin: 5px;">الغاء</button>
+</div>

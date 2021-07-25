@@ -1,0 +1,87 @@
+<div class="content-wrapper" style="margin-left: 0px; min-height: 0px;">
+    <div class="box box-primary">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-accent-primary">
+                        <div class="card-header">
+                            <h1>تقرير المصاريف</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="date">من تاريخ <i style="color: red;">*</i></label>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>اختر تاريخ</mat-label>
+                                        <input matInput [matDatepicker]="dateFromPicker" style="height: auto;"
+                                            [(ngModel)]="expenseFilter.dateFrom" #dateFrom="ngModel" name="dateFrom"
+                                            class="form-control" id="dateFrom" placeholder="من تاريخ" required>
+                                        <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #dateFromPicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label for="date">الى تاريخ <i style="color: red;">*</i></label>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>اختر تاريخ</mat-label>
+                                        <input matInput [matDatepicker]="dateToPicker" style="height: auto;"
+                                            [(ngModel)]="expenseFilter.dateTo" #dateTo="ngModel" name="dateTo"
+                                            class="form-control" id="dateTo" placeholder="الى تاريخ" required>
+                                        <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #dateToPicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="type">النوع </label>
+                                    <mat-form-field appearance="fill" class="mat-select-cls">
+                                        <mat-label>اختر</mat-label>
+                                        <mat-select [(ngModel)]="expenseFilter.type" [required]="true" #type="ngModel"
+                                            name="type" id="type" panelClass="mat-select-cls">
+                                            <mat-option [value]="0"> الكل </mat-option>
+                                            <mat-option [value]="expenseTypeEnum.In"> داخل للعيادة </mat-option>
+                                            <mat-option [value]="expenseTypeEnum.Out"> خارج من العيادة </mat-option>
+                                        </mat-select>
+                                    </mat-form-field><br>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label for="clinic">العيادة</label>
+                                    <mat-form-field appearance="fill" class="mat-select-cls">
+                                      <mat-label>اختر</mat-label>
+                                      <mat-select [(ngModel)]="expenseFilter.clinicId" #clinic="ngModel" name="clinic" id="clinic">
+                                        <input (keyup)="filterClinic($event.target.value)" class="form-control" placeholder="اختر العيادة">
+                                        <mat-option [value]="0">الكل </mat-option>
+                                        <mat-option *ngFor="let clinic of filteredClinicList" [value]="clinic.id">{{ clinic.name }} </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                
+                                  <div class="col-md-4 form-group">
+                                    <label for="user">الدكتور </label>
+                                    <mat-form-field appearance="fill" class="mat-select-cls">
+                                      <mat-label>اختر</mat-label>
+                                      <mat-select [(ngModel)]="expenseFilter.userId" #user="ngModel" name="user" id="user">
+                                        <input (keyup)="filterUser($event.target.value)" class="form-control" placeholder="اختر الدكتور">
+                                        <mat-option [value]="0">الكل </mat-option>
+                                        <mat-option *ngFor="let user of filteredUserList" [value]="user.id">{{ user.fullName }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" style="text-align: center;">
+                                   <button class="btn btn-primary" (click)="openReport()">اعرض التقرير</button>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

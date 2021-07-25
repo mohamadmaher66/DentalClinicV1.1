@@ -1,0 +1,85 @@
+<h1 mat-dialog-title *ngIf="expense.id == undefined">اضافة مصاريف جديد</h1>
+<h1 mat-dialog-title *ngIf="expense.id != undefined">تعديل مصاريف</h1>
+<div mat-dialog-content>
+  <div class="content-wrapper" style="margin-left: 0px; background-color: #ffffff; min-height: 0px;">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-primary">
+          <form role="form" #ExpenseFrom="ngForm">
+            <div class="box-body">
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="name">العنوان <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="expense.name" #name="ngModel" type="text" class="form-control" name="name"
+                    id="name" placeholder="العنوان" required>
+                  <small *ngIf="name.invalid && (name.touched || name.dirty)" style="color: red">يجب ادخال العنوان</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="cost">التكلفة <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="expense.cost" #cost="ngModel" type="number" class="form-control" name="cost"
+                    id="cost" placeholder="التكلفة" min="0" required>
+                  <small *ngIf="cost.invalid && (cost.touched || cost.dirty)" style="color: red">يجب ادخال التكلفة</small>
+                </div>
+                
+                <div class="col-md-4 form-group">
+                  <label for="actionDate">التاريخ <i style="color: red;">*</i></label><br>
+                  <mat-form-field appearance="legacy">
+                    <mat-label>اختر تاريخ</mat-label>
+                    <input matInput [matDatepicker]="picker" style="height: auto;" [(ngModel)]="expense.actionDate" #actionDate="ngModel" name="actionDate"
+                      class="form-control" id="actionDate" placeholder="التاريخ" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="clinicId">العيادة <i style="color: red;">*</i></label>
+                  <mat-form-field appearance="fill" class="mat-select-cls">
+                    <mat-label>اختر</mat-label>
+                    <mat-select [(ngModel)]="expense.clinicId" #clinicId="ngModel" name="clinicId" id="clinicId" [required]="true">
+                        <input (keyup)="filterClinic($event.target.value)" class="form-control" placeholder="اختر العيادة">
+                        <mat-option *ngFor="let clinic of filteredClinicList" [value]="clinic.id">{{ clinic.name }}</mat-option>
+                     </mat-select>
+                  </mat-form-field><br>
+                  <small *ngIf="clinicId.invalid && (clinicId.touched || clinicId.dirty)" style="color: red">يجب اختيار العيادة</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="type">النوع <i style="color: red;">*</i></label>
+                  <mat-form-field appearance="fill" class="mat-select-cls">
+                    <mat-label>اختر</mat-label>
+                    <mat-select [(ngModel)]="expense.type" [required]="true" #type="ngModel" name="type" id="type" panelClass="mat-select-cls">
+                      <mat-option [value]="expenseTypeEnum.In"> داخل للعيادة </mat-option>
+                      <mat-option [value]="expenseTypeEnum.Out"> خارج من العيادة </mat-option>
+                    </mat-select>
+                  </mat-form-field><br>
+                  <small *ngIf="type.invalid && (type.touched || type.dirty)" style="color: red">يجب اختيار نوع المصاريف</small>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <label for="description">الوصف</label>
+                  <textarea [(ngModel)]="expense.description" #description="ngModel" type="text" name="description"
+                    class="form-control" id="description" placeholder="الوصف" rows="5"></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div mat-dialog-actions style="float: right;">
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary" (click)="submitExpense(ExpenseFrom)" [disabled]="ExpenseFrom.invalid">{{btnTitle}}</button>
+    <button type="button" class="btn btn-secondary" style="margin-left: 10px;"
+      (click)="dialogRef.close();">الغاء</button>
+  </div>
+</div>

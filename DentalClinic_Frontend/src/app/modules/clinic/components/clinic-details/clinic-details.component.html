@@ -1,0 +1,38 @@
+<h1 mat-dialog-title *ngIf="clinic.id == undefined">اضافة عيادة جديد</h1>
+<h1 mat-dialog-title *ngIf="clinic.id != undefined">تعديل عيادة</h1>
+<div mat-dialog-content>
+  <div class="content-wrapper" style="margin-left: 0px; background-color: #ffffff; min-height: 0px;">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-primary">
+          <form role="form" #clinicFrom="ngForm">
+            <div class="box-body">
+
+              <div class="row">
+                <div class="col-md-4 form-group">
+                  <label for="name">الاسم <i style="color: red;">*</i></label>
+                  <input [(ngModel)]="clinic.name" #name="ngModel" type="text" class="form-control"
+                    name="name" id="name" placeholder="الاسم" required>
+                  <small *ngIf="name.invalid && (name.touched || name.dirty)" style="color: red">يجب ادخال الاسم</small>
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label for="address">العنوان</label>
+                  <input [(ngModel)]="clinic.address" #address="ngModel" type="text" class="form-control"
+                    name="address" id="address" placeholder="العنوان">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div mat-dialog-actions style="float: right;">
+  <div class="box-footer">
+    <button type="submit" class="btn btn-primary" (click)="submitClinic(clinicFrom)" [disabled]="clinicFrom.invalid">{{btnTitle}}</button>
+    <button type="button" class="btn btn-secondary" style="margin-left: 10px;" (click)="dialogRef.close();">الغاء</button>
+  </div>
+</div>

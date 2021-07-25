@@ -1,0 +1,38 @@
+<app-header [navbarBrandRouterLink]="['/dashboard']" [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/brand/tooth.svg', width: 89, height: 25, alt: 'Logo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/brand/tooth.svg', width: 30, height: 30, alt: 'Logo'}"
+  [navbarBrandText]="'Dental Clinic'" [sidebarToggler]="'lg'" [asideMenuToggler]="false"
+  [mobileAsideMenuToggler]="false">
+
+  <ul class="nav navbar-nav d-md-down-none">
+    <li class="nav-item px-3">
+      <h5>اهلا {{sessionService.getUserName()}}</h5>
+    </li>
+  </ul>
+
+  <ul class="nav navbar-nav ml-auto" style="margin: 0 0 0 15px !important;">
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" 
+        dropdownToggle (click)="false">
+        <button class="dropdown-item" style="min-width: 140ox;" (click)="logout()">
+          <i class="fa fa-sign-out fa-lg"></i> تسجيل خروج
+        </button>
+      </a>
+    </li>
+  </ul>
+</app-header>
+
+<div class="app-body">
+  <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized"
+    (minimizedChange)="toggleMinimize($event)">
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <!-- Main content -->
+  <main class="main">
+    <div class="container-fluid" style="margin-top: 20px;">
+      <router-outlet></router-outlet>
+    </div><!-- /.container-fluid -->
+    
+  </main>
+</div>
