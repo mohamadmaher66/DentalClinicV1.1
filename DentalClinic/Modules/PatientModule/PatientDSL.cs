@@ -1,12 +1,11 @@
 ﻿using Infrastructure;
 using System;
 using System.Linq;
-using DBContext;
+using AppDBContext;
 using DTOs;
 using System.Collections.Generic;
 using AutoMapper;
 using Request;
-using ClinicModule;
 using Enums;
 using MedicalHistoryModule;
 
@@ -29,7 +28,11 @@ namespace PatientModule
         {
             try
             {
-                return patientRepository.GetAll(gridSettings).ToList();
+                return patientRepository.GetAll(gridSettings, x => string.IsNullOrEmpty(gridSettings.SearchText) ? true :
+                                    (x.FullName.Contains(gridSettings.SearchText)
+                                    || x.Address.Contains(gridSettings.SearchText)
+                                    || x.Phone.Contains(gridSettings.SearchText)
+                                    )).ToList();
             }
             catch (Exception e)
             {
@@ -65,7 +68,7 @@ namespace PatientModule
             try
             {
                 patient.Id = patientRepository.Add(patient, userId);
-                AddPatientMedicalHistoryList(patient.MedicalHistoryList, patient.Id);
+                //AddPatientMedicalHistoryList(patient.MedicalHistoryList, patient.Id);
                 UoW.SaveChanges();
             }
             catch (Exception e)
@@ -79,8 +82,8 @@ namespace PatientModule
             try
             {
                 patientRepository.Update(patient, userId);
-                RemovePatientMedicalHistoryList(patient.Id);
-                AddPatientMedicalHistoryList(patient.MedicalHistoryList, patient.Id);
+                //RemovePatientMedicalHistoryList(patient.Id);
+                //AddPatientMedicalHistoryList(patient.MedicalHistoryList, patient.Id);
                 UoW.SaveChanges();
             }
             catch (Exception e)
@@ -92,7 +95,7 @@ namespace PatientModule
         {
             try
             {
-                RemovePatientMedicalHistoryList(patient.Id);
+                //RemovePatientMedicalHistoryList(patient.Id);
                 patientRepository.Delete(patient);
                 UoW.SaveChanges();
             }
@@ -128,7 +131,7 @@ namespace PatientModule
         {
             try
             {
-                patientRepository.AddPatientMedicalHistoryList(medicalHistoryList, patientId);
+                //patientRepository.AddPatientMedicalHistoryList(medicalHistoryList, patientId);
                 UoW.SaveChanges();
             }
             catch (Exception e)
@@ -140,7 +143,7 @@ namespace PatientModule
         {
             try
             {
-                patientRepository.RemovePatientMedicalHistoryList(patientId);
+                //patientRepository.RemovePatientMedicalHistoryList(patientId);
                 UoW.SaveChanges();
             }
             catch (Exception e)

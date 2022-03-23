@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using System;
 using System.Linq;
-using DBContext;
+using AppDBContext;
 using DTOs;
 using System.Collections.Generic;
 using AutoMapper;
@@ -214,7 +214,7 @@ namespace AppointmentModule
                     List = catList
                 });
 
-                List<AppointmentAdditionDTO> additionList = new AppointmentAdditionDSL(mapper).GetAllLite();
+                List<AppointmentAdditionDTO> additionList = new AppointmentAdditionDSL(UoW,mapper).GetAllLite();
                 detailsList.Add(new DetailsList()
                 {
                     DetailsListId = (int)DetailsListEnum.AppointmentAddition,

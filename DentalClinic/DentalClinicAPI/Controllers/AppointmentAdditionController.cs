@@ -5,6 +5,7 @@ using Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Request;
+using Infrastructure;
 
 namespace DentalClinicAPI.Controllers
 {
@@ -15,9 +16,9 @@ namespace DentalClinicAPI.Controllers
     {
         private readonly AppointmentAdditionDSL appointmentAdditionDSL;
 
-        public AppointmentAdditionController(IMapper _mapper)
+        public AppointmentAdditionController(IUnitOfWork uow, IMapper _mapper)
         {
-            appointmentAdditionDSL = new AppointmentAdditionDSL(_mapper);
+            appointmentAdditionDSL = new AppointmentAdditionDSL(uow, _mapper);
         }
 
         [HttpPost]

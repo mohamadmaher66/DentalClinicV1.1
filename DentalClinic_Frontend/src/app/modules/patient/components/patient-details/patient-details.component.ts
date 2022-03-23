@@ -30,6 +30,7 @@ export class PatientDetailsComponent implements OnInit {
     }
 
   ngOnInit() {
+    debugger;
     this.patient.id = this.data.selectedDetails;
     if (this.patient.id > 0) {
       this.btnTitle = 'حفظ';
@@ -50,7 +51,7 @@ export class PatientDetailsComponent implements OnInit {
       err => this.getPatientOnError(err)
     );
   }
-
+// 
   private getPatientOnSuccess(response: RequestedData<Patient>){
     this.alertService.viewAlerts(response.alerts);
     this.patient = response.entity as Patient;

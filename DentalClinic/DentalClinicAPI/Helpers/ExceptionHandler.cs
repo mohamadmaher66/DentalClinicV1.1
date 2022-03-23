@@ -16,7 +16,7 @@ namespace DentalClinicAPI.Helpers
             var feature = context.Features.Get<IExceptionHandlerPathFeature>();
             var exception = feature.Error;
 
-            Logger.Log(exception.Message + "\n" + exception.InnerException);
+            Logger.Log(exception);
 
             Alert alert = new Alert
             {

@@ -1,18 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.12" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\DBContext\DBContext.csproj" />
+    <ProjectReference Include="..\..\Core\DBContext\AppDBContext.csproj" />
     <ProjectReference Include="..\..\Core\DBModels\DBModels.csproj" />
     <ProjectReference Include="..\..\Core\DTOs\DTOs.csproj" />
     <ProjectReference Include="..\..\Core\Enums\Enums.csproj" />

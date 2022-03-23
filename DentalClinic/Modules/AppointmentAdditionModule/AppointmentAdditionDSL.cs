@@ -1,22 +1,22 @@
 ﻿using Infrastructure;
 using System;
 using System.Linq;
-using DBContext;
 using DTOs;
 using System.Collections.Generic;
 using AutoMapper;
 using Request;
+using DBModels;
 
 namespace AppointmentAdditionModule
 {
     public class AppointmentAdditionDSL
     {
         AppointmentAdditionRepository appointmentAdditionRepository;
-        UnitOfWork UoW;
+        IUnitOfWork UoW;
 
-        public AppointmentAdditionDSL(IMapper _mapper)
+        public AppointmentAdditionDSL(IUnitOfWork uow, IMapper _mapper)
         {
-            UoW = new UnitOfWork(new DentalClinicDBContext());
+            UoW = uow;
             appointmentAdditionRepository = new AppointmentAdditionRepository(UoW, _mapper);
         }
 
@@ -24,7 +24,11 @@ namespace AppointmentAdditionModule
         {
             try
             {
-                return appointmentAdditionRepository.GetAll(gridSettings).ToList();
+                double.TryParse(gridSettings.SearchText, out double price);
+                return appointmentAdditionRepository.GetAll(gridSettings, x => string.IsNullOrEmpty(gridSettings.SearchText) ? true :
+                                                                                    (x.Name.Contains(gridSettings.SearchText)
+                                                                                    || x.Price == price
+                                                                                    )).ToList();
             }
             catch (Exception e)
             {

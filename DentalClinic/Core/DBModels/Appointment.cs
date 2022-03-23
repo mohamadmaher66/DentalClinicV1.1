@@ -1,16 +1,11 @@
 ﻿using Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DBModels
 {
-    public class Appointment : AuditModel
+    public class Appointment : AuditEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public int CategoryId { get; set; }
         public AppointmentCategory Category { get; set; }
         public int UserId { get; set; }

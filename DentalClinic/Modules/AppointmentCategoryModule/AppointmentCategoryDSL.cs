@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using System;
 using System.Linq;
-using DBContext;
+using AppDBContext;
 using DTOs;
 using System.Collections.Generic;
 using AutoMapper;
@@ -24,7 +24,11 @@ namespace AppointmentCategoryModule
         {
             try
             {
-                return appointmentCategoryRepository.GetAll(gridSettings).ToList();
+                double.TryParse(gridSettings.SearchText, out double price);
+                return appointmentCategoryRepository.GetAll(gridSettings, x => string.IsNullOrEmpty(gridSettings.SearchText) ? true :
+                                                                                    (x.Name.Contains(gridSettings.SearchText)
+                                                                                    || x.Price == price
+                                                                                    )).ToList();
             }
             catch (Exception e)
             {

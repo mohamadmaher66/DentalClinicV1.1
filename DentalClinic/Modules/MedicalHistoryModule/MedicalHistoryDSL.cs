@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using System;
 using System.Linq;
-using DBContext;
+using AppDBContext;
 using DTOs;
 using System.Collections.Generic;
 using AutoMapper;
@@ -24,7 +24,7 @@ namespace MedicalHistoryModule
         {
             try
             {
-                return medicalHistoryRepository.GetAll(gridSettings).ToList();
+                return medicalHistoryRepository.GetAll(gridSettings, x => string.IsNullOrEmpty(gridSettings.SearchText) ? true : x.Name.Contains(gridSettings.SearchText)).ToList();
             }
             catch (Exception e)
             {

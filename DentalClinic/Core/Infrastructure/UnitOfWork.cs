@@ -1,10 +1,11 @@
-﻿using DBContext;
+﻿using AppDBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public DentalClinicDBContext DbContext { get; }
+        public DbContext DbContext { get; }
         public UnitOfWork(DentalClinicDBContext dbContext)
         {
             DbContext = dbContext;

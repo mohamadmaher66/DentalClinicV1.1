@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 
-namespace DBContext
+namespace AppDBContext
 {
     public class DentalClinicDBContext : DbContext
     {
@@ -18,7 +18,7 @@ namespace DBContext
         public DbSet<Expense> Expense { get; set; }
         public DbSet<AppointmentTooth> AppointmentTooth { get; set; }
         public DbSet<Clinic> Clinic { get; set; }
-        public DbSet<PatientMedicalHistory> PatientMedicalHistory { get; set; }
+        //public DbSet<PatientMedicalHistory> PatientMedicalHistory { get; set; }
         public DbSet<AppointmentAppointmentAddition> AppointmentAppointmentAddition { get; set; }
 
 
@@ -33,7 +33,6 @@ namespace DBContext
                         .AddJsonFile(Path.Combine(Environment.CurrentDirectory, "appsettings.json"))
                         .Build();
                     _connectionString = config.GetSection("ConnectionStrings")["DBConnectionString"];
-                    _connectionString = _connectionString.Replace("[DataDirectory]", Directory.GetCurrentDirectory());
                 }
                 return _connectionString;
             }
@@ -55,12 +54,14 @@ namespace DBContext
             modelBuilder.Entity<PatientMedicalHistory>()
                     .HasOne(PMH => PMH.Patient)
                     .WithMany(PMH => PMH.PatientMedicalHistoryList)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .HasForeignKey(PMH => PMH.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<PatientMedicalHistory>()
                 .HasOne(PMH => PMH.MedicalHistory)
                 .WithMany(PMH => PMH.PatientMedicalHistoryList)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(PMH => PMH.MedicalHistoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AppointmentAppointmentAddition>()
                 .HasKey(aaa => new { aaa.AppointmentId, aaa.AppointmentAdditionId });
@@ -75,8 +76,10 @@ namespace DBContext
                 .WithMany(aaa => aaa.AppointmentAppointmentAddition)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.Clinic)
+                .WithMany(e => e.ExpenseList)
+                .HasForeignKey(e => e.ClinicId);
         }
-
     }
 }

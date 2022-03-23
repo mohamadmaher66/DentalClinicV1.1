@@ -5,7 +5,7 @@ namespace DentalClinicAPI.Helpers
 {
     public static class Logger
     {
-        public static void Log(string errorMessage)
+        public static void Log(Exception ex)
         {
             try
             {
@@ -17,13 +17,17 @@ namespace DentalClinicAPI.Helpers
                 filePath = Path.Combine(filePath, DateTime.Now.ToString("yyyy-MM-dd-HH-MM-ss") + "_" + Guid.NewGuid().ToString("N") + ".log");
                 using (StreamWriter writer = new StreamWriter(filePath, true))
                 {
-                    if (errorMessage != null)
+                    if (ex.Message != null)
                     {
-                        writer.WriteLine(errorMessage);
+                        writer.WriteLine("Message: " + ex.Message);
+                        writer.WriteLine();
+                        writer.WriteLine("Inner Exception: " + ex.InnerException);
+                        writer.WriteLine();
+                        writer.WriteLine("Stack Trace: " + ex.StackTrace);
                     }
                 }
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception e) { throw e; }
         }
     }
 }

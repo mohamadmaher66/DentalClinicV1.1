@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using System;
 using System.Linq;
-using DBContext;
+using AppDBContext;
 using DTOs;
 using System.Collections.Generic;
 using AutoMapper;
@@ -28,7 +28,11 @@ namespace ExpenseModule
         {
             try
             {
-                return expenseRepository.GetAll(gridSettings).ToList();
+                double.TryParse(gridSettings.SearchText, out double cost);
+
+                return expenseRepository.GetAll(gridSettings, x => string.IsNullOrEmpty(gridSettings.SearchText) ? true :
+                                                   (x.Name.Contains(gridSettings.SearchText)
+                                                   || x.Cost == cost)).ToList();
             }
             catch (Exception e)
             {

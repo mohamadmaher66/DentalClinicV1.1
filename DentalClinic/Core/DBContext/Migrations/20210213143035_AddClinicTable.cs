@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DBContext.Migrations
+namespace AppDBContext.Migrations
 {
     public partial class AddClinicTable : Migration
     {

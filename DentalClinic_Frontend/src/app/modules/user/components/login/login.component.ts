@@ -35,7 +35,7 @@ export class LoginComponent {
     );
   }
   loginOnSuccess(res: any): void {
-    if(hasValue(res.entity.token)){
+    if(hasValue(res.entity) && hasValue(res.entity.token)){
       this.sessionService.currentUser = res.entity;
       this.sessionService.setToken(res.entity.token);
       this.sessionService.setUserRole(res.entity.role);

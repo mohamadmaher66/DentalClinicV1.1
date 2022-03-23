@@ -2,8 +2,10 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using AutoMapper;
+using AppDBContext;
 using DentalClinicAPI.Helpers;
 using DTOs;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +37,7 @@ namespace DentalClinicAPI
                 mc.AddProfile(new MappingProfile());
             });
             IMapper mapper = mapperConfig.CreateMapper();
+
             services.AddSingleton(mapper);
 
             services.AddControllers().AddNewtonsoftJson();
@@ -52,18 +55,20 @@ namespace DentalClinicAPI
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                        .GetBytes("DentalClinicKey#12*")),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("DentalClinicKey#12*")),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
             });
+
+            // DI config
+            services.AddDbContext<DentalClinicDBContext>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -85,8 +90,8 @@ namespace DentalClinicAPI
 
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
-                RequestPath = new PathString("/Images")
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"CompanyContracts")),
+                RequestPath = new PathString("/CompanyContracts")
             });
 
             app.UseEndpoints(endpoints =>

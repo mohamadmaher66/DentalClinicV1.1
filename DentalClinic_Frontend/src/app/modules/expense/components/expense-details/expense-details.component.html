@@ -1,5 +1,5 @@
-<h1 mat-dialog-title *ngIf="expense.id == undefined">اضافة مصاريف جديد</h1>
-<h1 mat-dialog-title *ngIf="expense.id != undefined">تعديل مصاريف</h1>
+<h1 mat-dialog-title *ngIf="expense.id == undefined || expense.id == 0">اضافة مصاريف جديد</h1>
+<h1 mat-dialog-title *ngIf="expense.id != undefined && expense.id > 0">تعديل مصاريف</h1>
 <div mat-dialog-content>
   <div class="content-wrapper" style="margin-left: 0px; background-color: #ffffff; min-height: 0px;">
     <div class="row">

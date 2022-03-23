@@ -2,13 +2,13 @@
 using DTOs;
 using Infrastructure;
 using DBModels;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System;
 using Request;
 using System.Globalization;
 using Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentModule
 {
@@ -29,7 +29,8 @@ namespace AppointmentModule
         {
             DateTime.TryParseExact(gridSettings.SearchText, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date);
 
-            IEnumerable<Appointment> appointmentList = dbset.Include(a => a.Category)
+            IEnumerable<Appointment> appointmentList = dbset.AsSplitQuery()
+                                                             .Include(a => a.Category)
                                                              .Include(a => a.Patient)
                                                              .Include(a => a.Clinic)
                                                              .Include(a => a.User)
@@ -38,7 +39,8 @@ namespace AppointmentModule
                                                                     || a.Clinic.Name.Contains(gridSettings.SearchText)
                                                                     || a.Patient.FullName.Contains(gridSettings.SearchText)
                                                                     || a.User.FullName.Contains(gridSettings.SearchText)
-                                                                    || (date > DateTime.MinValue && a.Date.Date == date.Date )));
+                                                                    || (date > DateTime.MinValue && a.Date.Date == date.Date)))
+                                                             .AsNoTracking();
 
             gridSettings.RowsCount = appointmentList.Count();
             return _mapper.Map<List<AppointmentDTO>>(appointmentList.OrderByDescending(m => m.CreationDate)
@@ -48,7 +50,8 @@ namespace AppointmentModule
 
         public IEnumerable<AppointmentDTO> GetAllDashboard(AppointmentDTO filterEntity)
         {
-            IEnumerable<Appointment> appointmentList = dbset.Include(a => a.Category)
+            IEnumerable<Appointment> appointmentList = dbset.AsSplitQuery()
+                                                             .Include(a => a.Category)
                                                              .Include(a => a.Patient)
                                                              .Include(a => a.Clinic)
                                                              .Include(a => a.User)
@@ -57,7 +60,8 @@ namespace AppointmentModule
                                                                       && (a.User.Id == filterEntity.User.Id || filterEntity.User.Id == 0)
                                                                       && a.Date.Date == DateTime.Now.Date
                                                                       && (a.State == AppointmentStateEnum.Current
-                                                                         || a.State == AppointmentStateEnum.Pending));
+                                                                         || a.State == AppointmentStateEnum.Pending))
+                                                             .AsNoTracking();
 
             return _mapper.Map<List<AppointmentDTO>>(appointmentList.OrderByDescending(a => a.State).ThenBy(a => a.CreationDate));
         }
@@ -127,6 +131,7 @@ namespace AppointmentModule
         public AppointmentDTO GetById(int appointmentId)
         {
             return _mapper.Map<AppointmentDTO>(entities.Set<Appointment>()
+                .AsSplitQuery()
                 .Include(PMH => PMH.AppointmentAppointmentAdditionList)
                 .ThenInclude(MH => MH.AppointmentAddition)
                 .Include(a => a.AppointmentToothList)

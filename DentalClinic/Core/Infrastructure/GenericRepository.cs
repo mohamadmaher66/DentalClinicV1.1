@@ -1,76 +1,68 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using AutoMapper;
+using DBModels;
+using Microsoft.EntityFrameworkCore;
+using Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Infrastructure
 {
-    public abstract class GenericRepository<T> where T : class
+    public abstract class GenericRepository<E,D> where E : AuditEntity 
     {
         protected DbContext _entities;
-        protected readonly DbSet<T> _dbset;
+        protected readonly DbSet<E> _dbset;
+        protected IMapper _mapper;
 
-        public GenericRepository(UnitOfWork UoW)
+        public GenericRepository(IUnitOfWork UoW, IMapper mapper)
         {
             _entities = UoW.DbContext;
-            _dbset = UoW.DbContext.Set<T>();
+            _dbset = UoW.DbContext.Set<E>();
+            _mapper = mapper;
         }
 
-        public virtual T GetFirst(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public virtual IEnumerable<D> GetAll(GridSettings gridSettings, Expression<Func<E, bool>> predicate)
         {
-            return _dbset.Where(predicate).FirstOrDefault();
-        }
-        public virtual T GetFirst()
-        {
-            return _dbset.FirstOrDefault();
-        }
-        public virtual bool IsExists(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
-        {
-            return GetFirst(predicate) == null ? false : true;
-        }
-        public virtual IEnumerable<T> GetAll()
-        {
-            return _dbset.AsEnumerable<T>();
+            IQueryable<E> appointmentAdditionList = _dbset.Where(predicate).AsNoTracking();
+
+            gridSettings.RowsCount = appointmentAdditionList.Count();
+
+            return _mapper.Map<List<D>>(appointmentAdditionList.OrderByDescending(m => m.CreationDate)
+                                     .Skip(gridSettings.PageSize * gridSettings.PageIndex)
+                                     .Take(gridSettings.PageSize).AsNoTracking());
         }
 
-        public IEnumerable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public virtual D GetById(int id)
         {
-            return _dbset.Where(predicate).AsEnumerable();
+            return _mapper.Map<D>(_entities.Set<E>().Find(id));
         }
 
-        public virtual EntityEntry<T> Add(T entity)
+        public virtual void Add(D dto, int userId)
         {
-            return _dbset.Add(entity);
+            E entity = _mapper.Map<E>(dto);
+            entity.CreationDate = DateTime.Now;
+            entity.CreatedBy = userId;
+
+            _dbset.Add(entity);
         }
 
-        public virtual EntityEntry<T> Delete(T entity)
+        public virtual void Update(D dto, int userId)
         {
-            return _dbset.Remove(entity);
+            E entity = _mapper.Map<E>(dto);
+            entity.ModifiedDate = DateTime.Now;
+            entity.ModifiedBy = userId;
+
+            //_entities.Entry(entity).State = EntityState.Modified;
+            _entities.Entry(entity).Property(m => m.CreatedBy).IsModified = false;
+            _entities.Entry(entity).Property(m => m.CreationDate).IsModified = false;
+
+            _dbset.Update(entity);
         }
 
-        public virtual void Edit(T entity)
+        public void Delete(D dto)
         {
-            _entities.Entry(entity).State = EntityState.Modified;
-        }
-        public long Count(System.Linq.Expressions.Expression<Func<T, bool>> whereCondition)
-        {
-            return _dbset.Where(whereCondition).Count();
-        }
-        public long Count()
-        {
-            return _dbset.Count();
-        }
-
-        public virtual T GetById(object id)
-        {
-            return _entities.Set<T>().Find(id);
-        }
-
-        public T GetLast()
-        {
-
-            return _dbset.LastOrDefault();
+            _dbset.Remove(_mapper.Map<E>(dto));
         }
     }
 }

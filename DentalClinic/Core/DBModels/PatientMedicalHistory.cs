@@ -1,4 +1,6 @@
-﻿namespace DBModels
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DBModels
 {
     public class PatientMedicalHistory
     {

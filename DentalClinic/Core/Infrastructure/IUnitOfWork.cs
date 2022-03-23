@@ -1,11 +1,11 @@
-﻿using DBContext;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Infrastructure
 {
-    internal interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
-        DentalClinicDBContext DbContext { get; }
+        DbContext DbContext { get; }
         void SaveChanges();
     }
 }
